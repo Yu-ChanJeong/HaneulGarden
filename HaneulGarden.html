@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Web Map with Multiple GeoJSON</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 1000px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>My Web Map with Multiple GeoJSON</h1>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        // 지도 초기화
+        var map = L.map('map').setView([37.445426, 126.472967], 13);
+
+        // OpenStreetMap 타일 레이어 추가
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // GeoJSON 파일 목록
+        var geojsonFiles = ['https://raw.githubusercontent.com/Yu-ChanJeong/HaneulGarden/main/Bridge.json', 'https://raw.githubusercontent.com/Yu-ChanJeong/HaneulGarden/main/Building.json', 'https://raw.githubusercontent.com/Yu-ChanJeong/HaneulGarden/main/CarRoad.json', 'https://raw.githubusercontent.com/Yu-ChanJeong/HaneulGarden/main/ContourLine.json', 'https://raw.githubusercontent.com/Yu-ChanJeong/HaneulGarden/main/Dike.json', 'https://raw.githubusercontent.com/Yu-ChanJeong/HaneulGarden/main/ElevationPoint.json', 'https://raw.githubusercontent.com/Yu-ChanJeong/HaneulGarden/main/ManRoad.json', 'https://raw.githubusercontent.com/Yu-ChanJeong/HaneulGarden/main/SiteLine.json', 'https://raw.githubusercontent.com/Yu-ChanJeong/HaneulGarden/main/ViewingPoint.json'];
+
+        geojsonFiles.forEach(function(file) {
+            fetch(file)
+                .then(response => response.json())
+                .then(data => {
+                    L.geoJSON(data).addTo(map); // 각 GeoJSON 데이터를 지도에 추가
+                })
+                .catch(error => console.error('Error loading GeoJSON file:', error));
+        });
+    </script>
+</body>
+</html>
